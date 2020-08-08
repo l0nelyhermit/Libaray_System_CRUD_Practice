@@ -531,6 +531,107 @@ def delete_editions(edition_id):
 
 
 
+# <--------------------------------------------CRUD WritingCredits---------------------------------------------->
+
+# Displays all writingcredits
+@app.route('/writingcredits')
+def show_writingcredits():
+    cursor = create_cursor()
+    try:
+        sql = "select * from writingCredits"
+        cursor.execute(sql)
+        return render_template('display/show_writingcredits.template.html',writingCredits=cursor)
+    except Exception as e:
+        return render_template('errors.template.html',error_msg = str(e))
+
+
+
+# Create the writingcredit and add to the database
+@app.route('/writingcredits/create',methods=['POST','GET'])
+def create_writingcredits():
+    if request.method =='GET':
+        try:
+            cursor= create_cursor()
+            cursor.execute("select author_id from authors")
+            bookCursor = create_cursor()
+            bookCursor.execute("select book_id from books")
+            return render_template('create/create_writingcredits.template.html',books=bookCursor,authors=cursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg = str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                INSERT INTO writingCredits (author_id,book_id) VALUES (%s,%s)
+            """
+            cursor.execute(sql,[
+                request.form.get('author_id'),
+                request.form.get('book_id')
+            ])
+            conn.commit()
+            return "The Writing Credit has been recorded into our database"
+
+        except Exception as e:
+            return render_template('errors.template.html',error_msg= str(e))
+
+
+# Edit the writingcredit in the database
+@app.route('/writingcredits/edit/<writing_credit_id>',methods=['POST','GET'])
+def edit_writingcredits(writing_credit_id):
+    if request.method == "GET":
+        try:
+            
+            authorCursor = create_cursor()
+            authorCursor.execute("select * from authors")
+
+            bookCursor = create_cursor()
+            bookCursor.execute("select * from books")
+
+            return render_template('edit/edit_writingcredits.template.html',
+                                    books=bookCursor,authors=authorCursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor=create_cursor()
+        try:
+            sql= """
+                update writingCredits set  author_id=%s, book_id=%s where writing_credit_id=%s
+            """
+            
+            cursor.execute(sql,[
+                request.form.get('author_id'),
+                request.form.get('book_id'),
+                writing_credit_id
+            ])
+
+            conn.commit()
+            return "The Writing Credit has been updated in our database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
+#deletes the writing credit in the database
+@app.route('/writingcredits/delete/<writing_credit_id>', methods=['GET','POST'])
+def delete_writingcredits(writing_credit_id):
+    if request.method == "GET":
+        try:
+            return render_template("delete/delete_writingcredits.template.html")
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                delete from writingCredits where writing_credit_id = %s
+            """
+            cursor.execute(sql,(writing_credit_id))
+            conn.commit()
+            return "The Writing Credit has been deleted from the database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
+
 
 if __name__ == "__main__":
     app.run(host=os.environ.get('IP'),

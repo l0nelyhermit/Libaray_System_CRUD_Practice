@@ -1,0 +1,21 @@
+{% extends 'create/create.base.html' %}
+
+{% block content %}
+    <h1> Add a Writing Credit to Our Database</h1>
+    <div>
+        <label>Author ID</label>
+        <select name="author_id" class="form-control">
+            {% for each_author in authors %}
+                <option value="{{each_author.author_id}}">{{each_author.author_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>Book ID</label>
+               <select name="book_id" class="form-control">
+            {% for each_book in books %}
+                <option value="{{each_book.book_id}}">{{each_book.book_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}
