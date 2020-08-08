@@ -1,0 +1,9 @@
+{% extends 'edit/edit.base.html' %}
+
+{% block content %}
+    <h1> Edit Your Book In Our Collection</h1>
+    <div>
+        <label>Book Title</label>
+        <input type="text" class="form-control" name="title" value="{{books.title}}"/>
+    </div>
+{% endblock %}

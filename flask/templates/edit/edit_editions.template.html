@@ -1,0 +1,29 @@
+{% extends 'edit/edit.base.html' %}
+
+{% block content %}
+    <h1> Edit the Edition from the Database</h1>
+    <div>
+        <label>ISBN</label>
+        <input type="text" class="form-control" name="isbn" value="{{editions.isbn}}"/>
+    </div>
+    <div>
+        <label>Publisher ID</label>
+        <select name="publisher_id" class="form-control">
+            {% for each_publisher in publishers %}
+                <option value="{{each_publisher.publisher_id}}"
+                    {%if each_publisher.publisher_id == publishers.publisher_id %} selected {% endif %}>
+                    {{each_publisher.publisher_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>Book ID</label>
+            <select name="book_id" class="form-control">
+            {% for each_book in books %}
+                <option value="{{each_book.book_id}}"
+                    {%if each_book.book_id == books.book_id %} selected {% endif %}>
+                    {{each_book.book_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}

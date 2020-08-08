@@ -1,0 +1,17 @@
+{% extends 'edit/edit.base.html' %}
+
+{% block content %}
+    <h1> Edit Your Publisher In Our Collection</h1>
+    <div>
+        <label>Full Name</label>
+        <input type="text" class="form-control" name="fname" value="{{publishers.fname}}"/>
+    </div>
+     <div>
+        <label>Address</label>
+        <input type="text" class="form-control" name="faddress" value="{{publishers.faddress}}"/>
+    </div>
+     <div>
+        <label>Email</label>
+        <input type="text" class="form-control" name="contact_email" value="{{publishers.contact_email}}"/>
+    </div>
+{% endblock %}

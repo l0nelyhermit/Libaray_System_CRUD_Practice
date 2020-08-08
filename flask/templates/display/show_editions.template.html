@@ -1,0 +1,33 @@
+{% extends 'display/base.display.html' %}
+
+{% block  content %}
+    <h1 style="display:flex;justify-content:center;">List of Editions</h1>
+    
+    <div class="container container-fluid">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Edition ID</th>
+                    <th>ISBN</th>
+                    <th>Publisher ID</th>
+                    <th>Book ID</th>
+                    <th>Edit Edition</th>
+                    <th>Delete Edition</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for each_edition in editions %}
+                <tr>
+                    <td>{{each_edition.edition_id}}</td>
+                    <td>{{each_edition.isbn}}</td>
+                    <td>{{each_edition.publisher_id}}</td>
+                    <td>{{each_edition.book_id}}</td>
+                    <td><a href="{{ url_for('edit_editions',edition_id=each_edition.edition_id)}}">Edit</a></td>
+                    <td><a href="{{ url_for('delete_editions',edition_id=each_edition.edition_id)}}">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <td><a href="{{ url_for('create_editions')}}">Add Your Own Edition To Our Database</a></td>
+    </div>
+{% endblock %}

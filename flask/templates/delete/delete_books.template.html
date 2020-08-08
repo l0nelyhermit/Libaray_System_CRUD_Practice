@@ -1,0 +1,6 @@
+{% extends 'delete/delete.base.html' %}
+
+{% block content %}
+    Are you sure you want to remove {{books.title}} from the database?
+    <a href="{{url_for('show_books')}}" class="btn btn-danger btn-lg">Cancel</a>
+{% endblock %}

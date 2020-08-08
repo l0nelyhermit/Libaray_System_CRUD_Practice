@@ -1,0 +1,25 @@
+{% extends 'create/create.base.html' %}
+
+{% block content %}
+    <h1> Add a Member to Our Database</h1>
+    <div>
+        <label>ISBN</label>
+        <input type="text" class="form-control" name="isbn"/>
+    </div>
+    <div>
+        <label>Publisher ID</label>
+        <select name="publisher_id" class="form-control">
+            {% for each_publisher in publishers %}
+                <option value="{{each_publisher.publisher_id}}">{{each_publisher.publisher_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>Book ID</label>
+               <select name="book_id" class="form-control">
+            {% for each_book in books %}
+                <option value="{{each_book.book_id}}">{{each_book.book_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}

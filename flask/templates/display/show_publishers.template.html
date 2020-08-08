@@ -1,0 +1,33 @@
+{% extends 'display/base.display.html' %}
+
+{% block  content %}
+    <h1 style="display:flex;justify-content:center;">List of Known Publishers</h1>
+    
+    <div class="container container-fluid">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Publisher ID</th>
+                    <th>Full Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Edit Publisher</th>
+                    <th>Delete Publisher</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for each_publisher in publishers %}
+                <tr>
+                    <td>{{each_publisher.publisher_id}}</td>
+                    <td>{{each_publisher.fname}}</td>
+                    <td>{{each_publisher.faddress}}</td>
+                    <td>{{each_publisher.contact_email}}</td>
+                    <td><a href="{{ url_for('edit_publishers',publisher_id=each_publisher.publisher_id)}}">Edit</a></td>
+                    <td><a href="{{ url_for('delete_publishers',publisher_id=each_publisher.publisher_id)}}">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <td><a href="{{ url_for('create_publishers')}}">Add a Publisher To Our Database</a></td>
+    </div>
+{% endblock %}
