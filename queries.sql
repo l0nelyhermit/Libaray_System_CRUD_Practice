@@ -18,3 +18,14 @@ create table if not exists vets (
     fname varchar(100),
     lname varchar(100)
 )engine = innodb;
+
+create table if not exists loans (
+    loan_id int unsigned primary key auto_increment,
+    date_due date not null,
+    date_returned date not null,
+    copy_id int unsigned not null,
+    foreign key (copy_id) references copies (copy_id),
+    member_id int unsigned not null,
+    foreign key (member_id) references members (member_id)
+
+)engine=InnoDB;

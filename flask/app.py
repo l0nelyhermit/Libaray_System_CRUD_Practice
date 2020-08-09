@@ -14,6 +14,12 @@ def create_cursor():
     library_system_cursor = conn.cursor()
     return library_system_cursor
 
+
+# Homepage
+@app.route('/')
+def homepage():
+    return render_template('homepage.template.html')
+
 # <--------------------------------STRONG ENTITIES----------------------------------->
 
 
@@ -417,6 +423,11 @@ def delete_books(book_id):
 
 
 # <------------------------------------ END OF STRONG ENTITIES ------------------------------------->
+
+
+
+
+# <--------------------------------------START OF ENTITIES WITH FOREIGN KEYS ------------------------------------->
 
 # <--------------------------CRUD EDITIONS ---------------------------------->
 # displays all the editions
@@ -839,6 +850,122 @@ def delete_copies(copy_id):
 
 
 
+# <------------------------------------------CRUD Loans ----------------------------------------------------->
+# Display all the Loans
+@app.route('/loans')
+def show_loans():
+    cursor = create_cursor()
+    try:
+        sql = "select * from loans"
+        cursor.execute(sql)
+        return render_template('display/show_loans.template.html',loans=cursor)
+    except Exception as e:
+        return render_template('errors.template.html',error_msg = str(e))
+
+
+# Create a loan and add to the database
+@app.route('/loans/create',methods=['POST','GET'])
+def create_loans():
+    if request.method =='GET':
+        try:
+            copyCursor= create_cursor()
+            copyCursor.execute("select copy_id from copies")
+            
+            memberCursor = create_cursor()
+            memberCursor.execute("select member_id from members")
+            return render_template('create/create_loans.template.html',copies=copyCursor,members=memberCursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg = str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                INSERT INTO loans (date_due,date_returned,copy_id,member_id) VALUES (%s,%s,%s,%s)
+            """
+            cursor.execute(sql,[
+                request.form.get('date_due'),
+                request.form.get('date_returned'),
+                request.form.get('copy_id'),
+                request.form.get('member_id')
+            ])
+            conn.commit()
+            return "The Loan has been recorded into our database"
+
+        except Exception as e:
+            return render_template('errors.template.html',error_msg= str(e))
+
+
+# Edit a Loan in the database
+@app.route('/loans/edit/<loan_id>',methods=['POST','GET'])
+def edit_loans(loan_id):
+    if request.method == "GET":
+        cursor =create_cursor()
+        try:
+            sql = """
+                select * from loans where loan_id = %s
+            """
+            cursor.execute(sql,(loan_id))
+            loans=cursor.fetchone()
+
+            copyCursor = create_cursor()
+            copyCursor.execute("select * from copies")
+
+            memberCursor = create_cursor()
+            memberCursor.execute("select * from members")
+
+            return render_template('edit/edit_loans.template.html',loans=loans,
+                                    members=memberCursor,copies=copyCursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor=create_cursor()
+        try:
+            sql= """
+                update loans set date_due=%s, date_returned=%s, copy_id=%s, member_id=%s where loan_id=%s
+            """
+            
+            cursor.execute(sql,[
+                request.form.get('date_due'),
+                request.form.get('date_returned'),
+                request.form.get('copy_id'),
+                request.form.get('member_id'),
+                loan_id
+            ])
+
+            conn.commit()
+            return "The Loan has been updated in our database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
+# Deletes a loan from the database
+@app.route('/loans/delete/<loan_id>', methods=['GET','POST'])
+def delete_loans(loan_id):
+    if request.method == "GET":
+        cursor =create_cursor()
+        try:
+            sql = """
+                select * from loans where loan_id = %s
+            """
+            cursor.execute(sql,(loan_id))
+            loans = cursor.fetchone()
+            return render_template("delete/delete_loans.template.html",loans=loans)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                delete from loans where loan_id = %s
+            """
+            cursor.execute(sql,(loan_id))
+            conn.commit()
+            return "The Loan has been deleted from the database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
+# <--------------------------------------END OF ENTITIES WITH FOREIGN KEYS ------------------------------------->
 
 if __name__ == "__main__":
     app.run(host=os.environ.get('IP'),

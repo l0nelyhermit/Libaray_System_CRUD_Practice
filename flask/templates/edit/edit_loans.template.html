@@ -1,0 +1,33 @@
+{% extends 'edit/edit.base.html' %}
+
+{% block content %}
+    <h1> Edit the Loan from the Database</h1>
+    <div>
+        <label>Due Date</label>
+        <input type="text" class="form-control" name="date_due" value="{{loans.date_due}}"/>
+    </div>
+    <div>
+        <label>Date Returned</label>
+        <input type="text" class="form-control" name="date_returned" value="{{loans.date_returned}}"/>
+    </div>
+    <div>
+        <label>Copy ID</label>
+        <select name="copy_id" class="form-control">
+            {% for each_copy in copies %}
+                <option value="{{each_copy.copy_id}}"
+                    {%if each_copy.copy_id == copies.copy_id %} selected {% endif %}>
+                    {{each_copy.copy_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>Member ID</label>
+            <select name="member_id" class="form-control">
+            {% for each_member in members %}
+                <option value="{{each_member.member_id}}"
+                    {%if each_member.member_id == members.member_id %} selected {% endif %}>
+                    {{each_member.member_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}

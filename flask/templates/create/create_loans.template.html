@@ -1,0 +1,29 @@
+{% extends 'create/create.base.html' %}
+
+{% block content %}
+    <h1> Add a Loan to Our Database</h1>
+    <div>
+        <label>Due Date</label>
+        <input type="text" class="form-control" name="date_due" placeholder="Please Enter Your date in the format 'YYYY-MM-DD'"/>
+    </div>
+    <div>
+        <label>Date Returned</label>
+        <input type="text" class="form-control" name="date_returned" placeholder="Please Enter Your date in the format 'YYYY-MM-DD'"/>
+    </div>
+    <div>
+        <label>Copy ID</label>
+        <select name="copy_id" class="form-control">
+            {% for each_copy in copies %}
+                <option value="{{each_copy.copy_id}}">{{each_copy.copy_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>Member ID</label>
+               <select name="member_id" class="form-control">
+            {% for each_member in members %}
+                <option value="{{each_member.member_id}}">{{each_member.member_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}
