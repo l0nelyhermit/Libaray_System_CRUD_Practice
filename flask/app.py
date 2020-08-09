@@ -725,6 +725,119 @@ def delete_reservations(reservation_id):
 
 
 
+# <--------------------------------------------------CRUD Copies ------------------------------------------------->
+# Display all copies
+@app.route('/copies')
+def show_copies():
+    cursor = create_cursor()
+    try:
+        sql = "select * from copies"
+        cursor.execute(sql)
+        return render_template('display/show_copies.template.html',copies=cursor)
+    except Exception as e:
+        return render_template('errors.template.html',error_msg = str(e))
+
+
+# Create a copy and add to database
+@app.route('/copies/create',methods=['POST','GET'])
+def create_copies():
+    if request.method =='GET':
+        try:
+            reservationCursor= create_cursor()
+            reservationCursor.execute("select reservation_id from reservations")
+            
+            bookCursor = create_cursor()
+            bookCursor.execute("select book_id from books")
+            return render_template('create/create_copies.template.html',books=bookCursor,reservations=reservationCursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg = str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                INSERT INTO copies (quality,reservation_id,book_id) VALUES (%s,%s,%s)
+            """
+            cursor.execute(sql,[
+                request.form.get('quality'),
+                request.form.get('reservation_id'),
+                request.form.get('book_id')
+            ])
+            conn.commit()
+            return "The Copy has been recorded into our database"
+
+        except Exception as e:
+            return render_template('errors.template.html',error_msg= str(e))
+
+
+# Edit a copy in the database
+@app.route('/copies/edit/<copy_id>',methods=['POST','GET'])
+def edit_copies(copy_id):
+    if request.method == "GET":
+        cursor =create_cursor()
+        try:
+            sql = """
+                select * from copies where copy_id = %s
+            """
+            cursor.execute(sql,(copy_id))
+            copies=cursor.fetchone()
+
+            reservationCursor = create_cursor()
+            reservationCursor.execute("select * from reservations")
+
+            bookCursor = create_cursor()
+            bookCursor.execute("select * from books")
+
+            return render_template('edit/edit_copies.template.html',copies=copies,
+                                    books=bookCursor,reservations=reservationCursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor=create_cursor()
+        try:
+            sql= """
+                update copies set quality=%s, reservation_id=%s, book_id=%s where copy_id=%s
+            """
+            
+            cursor.execute(sql,[
+                request.form.get('quality'),
+                request.form.get('reservation_id'),
+                request.form.get('book_id'),
+                copy_id
+            ])
+
+            conn.commit()
+            return "The Copy has been updated in our database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
+# Delete the copy from the database
+@app.route('/copies/delete/<copy_id>', methods=['GET','POST'])
+def delete_copies(copy_id):
+    if request.method == "GET":
+        cursor =create_cursor()
+        try:
+            sql = """
+                select * from copies where copy_id = %s
+            """
+            cursor.execute(sql,(copy_id))
+            copies = cursor.fetchone()
+            return render_template("delete/delete_copies.template.html",copies=copies)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                delete from copies where copy_id = %s
+            """
+            cursor.execute(sql,(copy_id))
+            conn.commit()
+            return "The Copy has been deleted from the database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
 
 
 if __name__ == "__main__":

@@ -1,0 +1,33 @@
+{% extends 'display/base.display.html' %}
+
+{% block  content %}
+    <h1 style="display:flex;justify-content:center;">List of Writing Credits</h1>
+    
+    <div class="container container-fluid">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Copy ID</th>
+                    <th>Quality</th>
+                    <th>Reservation ID</th>
+                    <th>Book ID</th>
+                    <th>Edit Copy</th>
+                    <th>Delete Copy</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for each_copy in copies %}
+                <tr>
+                    <td>{{each_copy.copy_id}}</td>
+                    <td>{{each_copy.quality}}</td>
+                    <td>{{each_copy.reservation_id}}</td>
+                    <td>{{each_copy.book_id}}</td>
+                    <td><a href="{{ url_for('edit_copies',copy_id=each_copy.copy_id)}}">Edit</a></td>
+                    <td><a href="{{ url_for('delete_copies',copy_id=each_copy.copy_id)}}">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <td><a href="{{ url_for('create_copies')}}">Add Your Own Copy To Our Database</a></td>
+    </div>
+{% endblock %}

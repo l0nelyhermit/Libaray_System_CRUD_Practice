@@ -1,0 +1,25 @@
+{% extends 'create/create.base.html' %}
+
+{% block content %}
+    <h1> Add a Copy to Our Database</h1>
+    <div>
+        <label>Quality</label>
+        <input type="text" class="form-control" name="quality" placeholder="Key in a Number from 1-5, 1=worst,5=best"/>
+    </div>
+    <div>
+        <label>Reservation ID</label>
+        <select name="reservation_id" class="form-control">
+            {% for each_reservation in reservations %}
+                <option value="{{each_reservation.reservation_id}}">{{each_reservation.reservation_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>Book ID</label>
+               <select name="book_id" class="form-control">
+            {% for each_book in books %}
+                <option value="{{each_book.book_id}}">{{each_book.book_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}

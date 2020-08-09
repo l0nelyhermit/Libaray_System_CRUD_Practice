@@ -1,0 +1,6 @@
+{% extends 'delete/delete.base.html' %}
+
+{% block content %}
+    Are you sure you want to remove this copy with a {{copies.quality}} rating from the database?
+    <a href="{{url_for('show_copies')}}" class="btn btn-danger btn-lg">Cancel</a>
+{% endblock %}
