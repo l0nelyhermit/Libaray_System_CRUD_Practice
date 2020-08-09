@@ -632,6 +632,100 @@ def delete_writingcredits(writing_credit_id):
 
 
 
+# <--------------------------------------------CRUD Reservations---------------------------------------------->
+
+# Displays all reservations
+@app.route('/reservations')
+def show_reservations():
+    cursor = create_cursor()
+    try:
+        sql = "select * from reservations"
+        cursor.execute(sql)
+        return render_template('display/show_reservations.template.html',reservations=cursor)
+    except Exception as e:
+        return render_template('errors.template.html',error_msg = str(e))
+
+# create the reservation and add to the database
+@app.route('/reservations/create',methods=['POST','GET'])
+def create_reservations():
+    if request.method =='GET':
+        try:
+            cursor= create_cursor()
+            cursor.execute("select member_id from members")
+            return render_template('create/create_reservations.template.html',members=cursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg = str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                INSERT INTO reservations (member_id) VALUES (%s)
+            """
+            cursor.execute(sql,[
+                request.form.get('member_id')
+            ])
+            conn.commit()
+            return "The reservation has been recorded into our database"
+
+        except Exception as e:
+            return render_template('errors.template.html',error_msg= str(e))
+
+
+# Edit the reservation in the database
+@app.route('/reservations/edit/<reservation_id>',methods=['POST','GET'])
+def edit_reservations(reservation_id):
+    if request.method == "GET":
+        try:
+            
+            memberCursor = create_cursor()
+            memberCursor.execute("select * from members")
+
+
+            return render_template('edit/edit_reservations.template.html',
+                                    members=memberCursor)
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor=create_cursor()
+        try:
+            sql= """
+                update reservations set  member_id=%s where reservation_id = %s
+            """
+            
+            cursor.execute(sql,[
+                request.form.get('member_id'),
+                reservation_id
+            ])
+
+            conn.commit()
+            return "The Reservation has been updated in our database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
+# Delete the reservation from the database
+@app.route('/reservations/delete/<reservation_id>', methods=['GET','POST'])
+def delete_reservations(reservation_id):
+    if request.method == "GET":
+        try:
+            return render_template("delete/delete_reservations.template.html")
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+    else:
+        cursor = create_cursor()
+        try:
+            sql = """
+                delete from reservations where reservation_id = %s
+            """
+            cursor.execute(sql,(reservation_id))
+            conn.commit()
+            return "The Reservation has been deleted from the database"
+        except Exception as e:
+            return render_template('errors.template.html',error_msg =str(e))
+
+
+
+
 
 if __name__ == "__main__":
     app.run(host=os.environ.get('IP'),

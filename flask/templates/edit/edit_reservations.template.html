@@ -1,0 +1,15 @@
+{% extends 'edit/edit.base.html' %}
+
+{% block content %}
+    <h1> Edit the Reservation from the Database</h1>
+    <div>
+        <label>Member ID</label>
+        <select name="member_id" class="form-control">
+            {% for each_member in members %}
+                <option value="{{each_member.member_id}}"
+                    {%if each_member.member_id == members.member_id %} selected {% endif %}>
+                    {{each_member.member_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}

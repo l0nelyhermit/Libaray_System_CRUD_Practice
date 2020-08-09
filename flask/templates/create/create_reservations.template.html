@@ -1,0 +1,13 @@
+{% extends 'create/create.base.html' %}
+
+{% block content %}
+    <h1> Add a Member ID to Our Database</h1>
+    <div>
+        <label>Member ID</label>
+               <select name="member_id" class="form-control">
+            {% for each_member in members %}
+                <option value="{{each_member.member_id}}">{{each_member.member_id}}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% endblock %}
